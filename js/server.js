@@ -307,19 +307,3 @@ app.listen(PORT, () => {
     console.log(`Phuza server running on http://localhost:${PORT}`);
     console.log('Active sessions:', activeSessions.size);
 });
-
-
-class casa{
-    #sapato = "sapato"
-    constructor(papel, sanita, agua, sabao){
-this.papel=papel
-this.sanita= sanita
-this.agua=agua
-this.sabao=sabao
-    }
-}
-const wc = new cagar("seda","ouro","agua","soja") 
-console.log("WC info:");
-console.log(`você tem ${wc.papel} de papel higienico e sanita de ${wc.sanita}, use ${wc.agua} de agua e ${wc.sabao} de sabão para se limpar`);
-
-console.log(`o numero do teu sapato é ${sapato}`)
