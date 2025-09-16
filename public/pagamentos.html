@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phuza - Acesso Premium</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Payment Popup Overlay */
+        .payment-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .payment-popup {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.3);
+            animation: popupAppear 0.5s ease;
+        }
+
+        @keyframes popupAppear {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .payment-title {
+            font-size: 2.5rem;
+            color: #00ffff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px #00ffff;
+        }
+
+        .payment-info {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .payment-price {
+            font-size: 3rem;
+            color: #00ff88;
+            font-weight: 900;
+            margin: 20px 0;
+            text-shadow: 0 0 20px #00ff88;
+        }
+
+        .user-input {
+            margin: 30px 0;
+        }
+
+        .user-input input {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .user-input input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .payment-btn {
+            background: linear-gradient(45deg, #00ffff, #00ff88);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #000;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .payment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .payment-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .main-content {
+            padding: 50px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .brand-title {
+            font-size: 5rem;
+            color: #00ffff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 50px #00ffff;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { text-shadow: 0 0 30px #00ffff; }
+            50% { text-shadow: 0 0 80px #00ffff; }
+        }
+
+        .description {
+            font-size: 1.5rem;
+            margin: 30px 0;
+            max-width: 600px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error-message {
+            color: #ff4444;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        .success-message {
+            color: #00ff88;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Payment Overlay -->
+    <div id="paymentOverlay" class="payment-overlay">
+        <div class="payment-popup">
+            <h2 class="payment-title">PHUZA PREMIUM</h2>
+            
+            <div class="payment-info">
+                Para acessar o conteúdo premium:
+            </div>
+            
+            <div class="payment-price">30.00 mzn</div>
+            
+            <div class="payment-info">
+                ⏱️ 3 horas de acesso<br>
+                🎮 Conteúdo premium completo<br>
+                🔄 Pagamento por sessão
+            </div>
+            
+            <div class="user-input">
+                <input 
+                    type="number" 
+                    id="userNumberInput" 
+                    placeholder="Seu número"
+                    min="1"
+                    max="999999999"
+                >
+                <div id="errorMessage" class="error-message hidden">
+                    Por favor, digite um número válido (1-999999999)
+                </div>
+                <div id="successMessage" class="success-message hidden"></div>
+            </div>
+            
+            <button class="payment-btn" id="paymentBtn" onclick="initPayment()">
+                💳 PAGAR E ACESSAR
+            </button>
+            
+            <div style="margin-top: 20px; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+                Pagamento seguro • Maiores de 18 anos
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content (blocked initially) -->
+    <div class="main-content" id="mainContent">
+        <h1 class="brand-title">PHUZA</h1>
+        <div class="description">
+            Bem-vindo ao Phuza Premium! <br>
+            Este conteúdo está protegido por pagamento.
+        </div>
+        <div style="font-size: 1.2rem; color: #00ff88; margin-top: 30px;">
+            Faça o pagamento para acessar o conteúdo premium por 15 segundos.
+        </div>
+    </div>
+
+    <script>
+        let userNumber = null;
+        let isPaymentProcessing = false;
+
+        // Check if user already has access on page load
+        window.addEventListener('load', async function() {
+            // Get user number from URL if redirected from payment
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlUserNumber = urlParams.get('user');
+            
+            if (urlUserNumber) {
+                userNumber = urlUserNumber;
+                await checkExistingAccess();
+            } else {
+                showPaymentPopup();
+            }
+        });
+
+        async function checkExistingAccess() {
+            if (!userNumber) return;
+
+            try {
+                const response = await fetch('/api/check-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userNumber: userNumber })
+                });
+
+                const result = await response.json();
+
+                if (result.hasAccess) {
+                    // User has active session, redirect to premium
+                    window.location.href = `/premium?user=${userNumber}`;
+                } else {
+                    // No access, show payment popup
+                    showPaymentPopup();
+                }
+            } catch (error) {
+                console.error('Erro verificando acesso:', error);
+                showPaymentPopup();
+            }
+        }
+
+        function showPaymentPopup() {
+            document.getElementById('paymentOverlay').classList.remove('hidden');
+        }
+
+        function hidePaymentPopup() {
+            document.getElementById('paymentOverlay').classList.add('hidden');
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 3000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                successDiv.classList.add('hidden');
+            }, 3000);
+        }
+
+        async function initPayment() {
+            if (isPaymentProcessing) return;
+
+            const userNumberInput = document.getElementById('userNumberInput');
+            const inputValue = userNumberInput.value.trim();
+
+            // Validate user number
+            if (!inputValue) {
+                showError('Por favor, digite seu número de usuário');
+                return;
+            }
+
+            const number = parseInt(inputValue);
+            if (isNaN(number) || number < 1 || number > 999999) {
+                showError('Número deve ser 82,83,84,85,86 ou 87');
+                return;
+            }
+
+            userNumber = inputValue;
+            isPaymentProcessing = true;
+
+            const paymentBtn = document.getElementById('paymentBtn');
+            paymentBtn.disabled = true;
+            paymentBtn.textContent = 'Processando...';
+
+            try {
+                // Check if user already has active session
+                const checkResponse = await fetch('/api/check-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userNumber: userNumber })
+                });
+
+                const checkResult = await checkResponse.json();
+
+                if (checkResult.hasAccess) {
+                    showSuccess('Você já tem acesso ativo! Redirecionando...');
+                    setTimeout(() => {
+                        window.location.href = `/premium?user=${userNumber}`;
+                    }, 1500);
+                    return;
+                }
+
+                // Initialize payment
+                const response = await fetch('/api/payment/init', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        userNumber: userNumber,
+                        amount: 5.00 
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.paymentUrl) {
+                    showSuccess('Redirecionando para pagamento...');
+                    setTimeout(() => {
+                        window.open(result.paymentUrl, '_blank', 'width=600,height=700');
+                    }, 1000);
+                } else {
+                    throw new Error('Erro ao inicializar pagamento');
+                }
+
+            } catch (error) {
+                console.error('Erro:', error);
+                showError('Erro ao processar. Tente novamente.');
+            } finally {
+                isPaymentProcessing = false;
+                paymentBtn.disabled = false;
+                paymentBtn.textContent = '💳 PAGAR E ACESSAR';
+            }
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('userNumberInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                initPayment();
+            }
+        });
+
+        // Focus on input when page loads
+        setTimeout(() => {
+            document.getElementById('userNumberInput').focus();
+        }, 500);
+    </script>
+</body>
+</html>

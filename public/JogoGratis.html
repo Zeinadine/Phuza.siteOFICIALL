@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHUZA - Jogo Grátis</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="STYLE.css">
+    <style>
+        /* Add some basic styling for the overlay and button */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .premium-button {
+            background-color: var(--accent-green); /* Assuming --accent-green is defined in your STYLE.css */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .premium-button:hover {
+            background-color: #0d8a4d; /* A darker shade of your accent green */
+        }
+        .game-instructions, .game-section, .footer-custom {
+            filter: blur(0px); /* Initial state, no blur */
+            transition: filter 0.5s ease-in-out;
+        }
+        .blur-content {
+            filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="#">PHUZA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Início</a>
+                    </li>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true" style="background-color: transparent; border: none;">
+                            jogar
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item diviver" href="JogoGratis.html"> jogo gratis</a></li>
+                            <li><a class="dropdown-item divider" href="html.html">jogo pago</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true" style="background-color: transparent; border: none;">
+                            Sobre
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item diviver" href="phuza_website (1).html">Como jogar</a></li>
+                            <li><a class="dropdown-item divider" href="phuza_website (1).html">Recursos</a></li>
+                        </ul>
+                    </div>
+                    <li class="nav-item">
+                </ul>
+                <button class="btn btn-hidden">ESCONDIDO</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="game-instructions" id="gameInstructions">
+        <h4 class="fw-bold mb-3" style="color: var(--accent-green);">
+            <i class="fas fa-info-circle"></i> Como Funciona
+        </h4>
+        <p class="mb-2">Clique em "TIRAR UMA CARTA" para revelar um desafio aleatório</p>
+        <p class="mb-2">Complete o desafio proposto ou... BEBA! 🍻</p>
+        <p class="text-warning fw-bold">⚠️ Apenas para maiores de 18 anos</p>
+    </div>
+
+    <section id="jogo gratis" class="py-5">
+        <div class="container">
+            <div class="game-section">
+                <h1 class="game-title">PHUZA</h1>
+                
+                <button onclick="sortearFoto()" class="draw-card-btn" id="drawCardBtn">
+                    <i class="fas fa-random me-2"></i>TIRAR UMA CARTA
+                </button>
+
+                <div class="card-container">
+                    <div id="cardDisplay" class="game-card">
+                    </div>
+                </div>
+
+                <div style="display: none;">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_75b5f03e83fc4cfb8be70cbf7b1defad~mv2.png" alt="Carta 1">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_9f29d76175c3465d9538d238ab00e510~mv2.png" alt="Carta 2">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_d126b5e4bd0945ad9eaa48f89a1139ee~mv2.png" alt="Carta 3">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_94bc59fb0f3d4ebb9029925e24930053~mv2.png" alt="Carta 4">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_5f9a8746f564491fa7a0f1a24148d044~mv2.png" alt="Carta 191">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_5419bd365e614aadac2c6a86635ce889~mv2.png" alt="Carta 192">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_0a229921735548aea5f3d604a2a95e36~mv2.png" alt="Carta 193">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_fdb45d8c84ea4e14bb47fa39478b4d5e~mv2.png" alt="Carta 194">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_4f0668b9820a4c33ac11179feb527d86~mv2.png" alt="Carta 195">
+                    <img class="foto" src="https://static.wixstatic.com/media/d48907_b690f39ba54e4c18a0fcbd0500c7bd15~mv2.png" alt="Carta 196">
+                </div>
+                
+                <div class="imagem">
+                    <p style="display: flex; justify-self: end;"> 
+                        <img style="display: flex; justify-content: end;" src="c:\Users\faruk\Downloads\Funny skeleton walking with beer jars by lokoz_edited.png" alt="14">
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer-custom" id="footerCustom">
+        <div class="container">
+            <div class="text-center">
+                <h5 class="fw-bold mb-3" style="color: var(--accent-blue);">PHUZA</h5>
+                <p class="text-secondary">O jogo de desafios definitivo para maiores de 18 anos</p>
+                <div class="social-links">
+                    <a href="#" class="text-secondary me-3"><i class="fab fa-facebook fa-2x"></i></a>
+                    <a href="#" class="text-secondary me-3"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="#" class="text-secondary me-3"><i class="fab fa-twitter fa-2x"></i></a>
+                </div>
+                <hr style="border-color: var(--accent-blue); opacity: 0.3;">
+                <p class="text-secondary">&copy; 2025 PHUZA. Todos os direitos reservados. | Jogo responsável - Maiores de 18 anos</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar-custom');
+    if (window.scrollY > 50) {
+        navbar.style.background = 'rgba(20, 20, 20, 0.98)';
+    } else {
+        navbar.style.background = 'rgba(20, 20, 20, 0.95)';
+    }
+});
+
+var fotos = Array.from(document.querySelectorAll('.foto'));
+var cardDisplay = document.getElementById('cardDisplay');
+var drawCardBtn = document.getElementById('drawCardBtn');
+var cardDrawCount = 0;
+const MAX_FREE_DRAWS = 10;
+
+function sortearFoto() {
+
+    if (cardDrawCount >= MAX_FREE_DRAWS) {
+        showPremiumOverlay();
+        return;
+    }
+
+    if (fotos.length === 0) {
+        cardDisplay.innerHTML = '<div style="text-align: center; color: var(--accent-blue);">Todas as fotos já foram exibidas!</div>';
+        cardDisplay.classList.add('visible');
+        if(drawCardBtn) {
+            drawCardBtn.disabled = true; 
+        }
+        return;
+    }
+    
+    
+    var numeroSorteado = Math.floor(Math.random() * fotos.length);
+    var cartaSorteada = fotos[numeroSorteado];
+    
+    
+    fotos.splice(numeroSorteado, 1);
+    
+    cardDisplay.classList.remove('visible');
+    
+    cardDisplay.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--accent-blue); font-size: 2rem;"><i class="fas fa-spinner fa-spin"></i></div>';
+    cardDisplay.classList.add('visible');
+    
+    setTimeout(function() {
+        cardDisplay.innerHTML = '<img src="' + cartaSorteada.src + '" alt="' + cartaSorteada.alt + '" style="width: 100%; height: 100%; object-fit: cover; border-radius: 17px;">';
+        
+        cardDisplay.style.transform = 'scale(0.8) rotateY(180deg)';
+        setTimeout(function() {
+            cardDisplay.style.transform = 'scale(1) rotateY(0deg)';
+        }, 100);
+    }, 1000);
+
+    cardDrawCount++;
+}
+
+document.querySelectorAll('.feature-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-10px) scale(1.02)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+    });
+});
+
+        function showPremiumOverlay() {
+            
+            document.getElementById('gameInstructions').classList.add('blur-content');
+            document.querySelector('.game-section').classList.add('blur-content');
+            document.getElementById('footerCustom').classList.add('blur-content');
+            document.querySelector('.navbar-custom').classList.add('blur-content');
+
+
+            
+            var overlay = document.createElement('div');
+            overlay.classList.add('overlay');
+            overlay.innerHTML = `
+                <h2 style="font-family: 'Orbitron', sans-serif;">Fim da Versão Gratuita!</h2>
+                <p style="font-size: 1.2rem;">Chegaste ao limite de ${MAX_FREE_DRAWS} cartas grátis. Para continuar a jogar e aceder a mais desafios, considera adquirir a versão premium!</p>
+                <button class="premium-button" onclick="goToPremium()">IR PARA O PREMIUM</button>
+            `;
+            document.body.appendChild(overlay);
+
+            
+            drawCardBtn.disabled = true;
+            drawCardBtn.style.cursor = 'not-allowed';
+            drawCardBtn.style.opacity = '0.6';
+        }
+
+        function goToPremium() {
+
+            window.location.href = 'html.html'; 
+        }
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+       
+</body>
+</html>

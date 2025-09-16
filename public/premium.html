@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phuza Premium - Acesso Liberado</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Timer Display */
+        .timer-display {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 255, 136, 0.2);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 2px solid #00ff88;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00ff88;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(0, 255, 136, 0.6); }
+        }
+
+        .timer-warning {
+            color: #ffaa00 !important;
+            border-color: #ffaa00 !important;
+            background: rgba(255, 170, 0, 0.2) !important;
+        }
+
+        .timer-critical {
+            color: #ff4444 !important;
+            border-color: #ff4444 !important;
+            background: rgba(255, 68, 68, 0.2) !important;
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        /* User Info */
+        .user-info {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: rgba(0, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 2px solid #00ffff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00ffff;
+            z-index: 1000;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 120px 50px 50px;
+            min-height: 100vh;
+        }
+
+        .premium-title {
+            font-size: 4rem;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 50px #00ffff;
+            animation: glow 3s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 50px #00ffff; }
+            50% { text-shadow: 0 0 80px #00ffff, 0 0 120px #00ffff; }
+        }
+
+        .welcome-message {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 50px;
+            color: #00ff88;
+        }
+
+        /* Game Section */
+        .game-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 50px;
+            margin: 30px 0;
+            border: 2px solid #00ffff;
+            text-align: center;
+        }
+
+        .draw-card-btn {
+            background: linear-gradient(45deg, #00ffff, #00ff88);
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .draw-card-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 255, 255, 0.5);
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .game-card {
+            width: 350px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 2px solid #00ff88;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #00ff88;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .game-card.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .premium-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #00ffff;
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+
+        .access-expired {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .expired-popup {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px;
+            text-align: center;
+            border: 2px solid #ff4444;
+            box-shadow: 0 0 50px rgba(255, 68, 68, 0.3);
+            animation: popupAppear 0.5s ease;
+        }
+
+        .expired-title {
+            font-size: 2.5rem;
+            color: #ff4444;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px #ff4444;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #ff4444, #ff6666);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Timer Display -->
+    <div id="timerDisplay" class="timer-display">
+        Tempo restante: <span id="timeLeft">15</span>s
+    </div>
+
+    <!-- User Info -->
+    <div id="userInfo" class="user-info">
+        Usuário: #<span id="userNumber">---</span>
+    </div>
+
+    <!-- Access Expired Popup -->
+    <div id="accessExpired" class="access-expired hidden">
+        <div class="expired-popup">
+            <h2 class="expired-title">ACESSO EXPIRADO</h2>
+            <p style="font-size: 1.2rem; margin: 20px 0;">
+                Seu tempo de acesso premium terminou!
+            </p>
+            <p style="color: #ffaa00; margin: 20px 0;">
+                Faça um novo pagamento para continuar acessando.
+            </p>
+            <button class="back-btn" onclick="goHome()">
+                VOLTAR AO INÍCIO
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <h1 class="premium-title">PHUZA PREMIUM</h1>
+        
+        <div class="welcome-message">
+            Bem-vindo à versão premium! Aproveite seus 15 segundos de acesso total.
+        </div>
+
+        <div class="game-section">
+            <h3 style="color: #00ffff; margin-bottom: 30px;">
+                <i class="fas fa-crown"></i> Jogo Premium Liberado
+            </h3>
+            
+            <button onclick="drawCard()" class="draw-card-btn">
+                <i class="fas fa-random"></i> TIRAR CARTA PREMIUM
+            </button>
+
+            <div class="card-container">
+                <div id="cardDisplay" class="game-card">
+                    Clique no botão acima para tirar uma carta premium!
+                </div>
+            </div>
+        </div>
+
+        <div class="premium-features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h4>Cartas Exclusivas</h4>
+                <p>Acesso a desafios premium únicos</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h4>Sistema de Pontos</h4>
+                <p>Contador avançado de pontuação</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>Modo Multiplayer</h4>
+                <p>Jogue com até 20 pessoas</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h4>Acesso Temporário</h4>
+                <p>15 segundos de diversão garantida</p>
+            </div>
+        </div>
+
+        <!-- Premium Game Cards (hidden images) -->
+        <div style="display: none;">
+            <img class="premium-card" src="https://static.wixstatic.com/media/d48907_75b5f03e83fc4cfb8be70cbf7b1defad~mv2.png" alt="Premium Card 1">
+            <img class="premium-card" src="https://static.wixstatic.com/media/d48907_9f29d76175c3465d9538d238ab00e510~mv2.png" alt="Premium Card 2">
+            <img class="premium-card" src="https://static.wixstatic.com/media/d48907_d126b5e4bd0945ad9eaa48f89a1139ee~mv2.png" alt="Premium Card 3">
+            <img class="premium-card" src="https://static.wixstatic.com/media/d48907_94bc59fb0f3d4ebb9029925e24930053~mv2.png" alt="Premium Card 4">
+            <img class="premium-card" src="https://static.wixstatic.com/media/d48907_d83994f4045349029c8f50bc9c57fe2f~mv2.png" alt="Premium Card 5">
+        </div>
+    </div>
+
+    <script>
+        let userNumber = null;
+        let timeLeft = 15;
+        let timerInterval = null;
+        let premiumCards = [];
+        let usedCards = [];
+
+        // Get user number from URL
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            userNumber = urlParams.get('user');
+            
+            if (!userNumber) {
+                // No user number, redirect to home
+                window.location.href = '/';
+                return;
+            }
+
+            document.getElementById('userNumber').textContent = userNumber;
+            
+            // Load premium cards
+            premiumCards = Array.from(document.querySelectorAll('.premium-card'));
+            
+            // Start checking access status
+            checkAccess();
+            startTimer();
+        });
+
+        async function checkAccess() {
+            try {
+                const response = await fetch(`/api/time/${userNumber}`);
+                const result = await response.json();
+
+                if (!result.hasAccess) {
+                    showAccessExpired();
+                    return;
+                }
+
+                // Update timer with server time
+                timeLeft = result.remainingTime;
+                updateTimerDisplay();
+
+                // Schedule next check
+                setTimeout(checkAccess, 1000);
+            } catch (error) {
+                console.error('Erro verificando acesso:', error);
+                setTimeout(checkAccess, 2000); // Retry in 2 seconds
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showAccessExpired();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const timeElement = document.getElementById('timeLeft');
+            const timerDisplay = document.getElementById('timerDisplay');
+            
+            timeElement.textContent = Math.max(0, timeLeft);
+
+            // Change timer appearance based on remaining time
+            timerDisplay.classList.remove('timer-warning', 'timer-critical');
+            
+            if (timeLeft <= 3) {
+                timerDisplay.classList.add('timer-critical');
+            } else if (timeLeft <= 7) {
+                timerDisplay.classList.add('timer-warning');
+            }
+        }
+
+        function showAccessExpired() {
+            clearInterval(timerInterval);
+            document.getElementById('accessExpired').classList.remove('hidden');
+        }
+
+        function goHome() {
+            window.location.href = '/';
+        }
+
+        function drawCard() {
+            if (premiumCards.length === 0) {
+                document.getElementById('cardDisplay').innerHTML = 
+                    '<div style="color: #ffaa00;">Todas as cartas premium foram usadas!</div>';
+                return;
+            }
+
+            const cardDisplay = document.getElementById('cardDisplay');
+            
+            // Remove visibility for animation
+            cardDisplay.classList.remove('visible');
+            
+            // Show loading
+            cardDisplay.innerHTML = 
+                '<div style="color: #00ffff; font-size: 2rem;"><i class="fas fa-spinner fa-spin"></i></div>';
+            cardDisplay.classList.add('visible');
+            
+            setTimeout(() => {
+                // Pick random card
+                const randomIndex = Math.floor(Math.random() * premiumCards.length);
+                const selectedCard = premiumCards[randomIndex];
+                
+                // Remove used card from array
+                premiumCards.splice(randomIndex, 1);
+                
+                // Display card
+                cardDisplay.innerHTML = 
+                    `<img src="${selectedCard.src}" alt="${selectedCard.alt}" 
+                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 17px;">`;
+                
+                // Animation effect
+                cardDisplay.style.transform = 'scale(0.8) rotateY(180deg)';
+                setTimeout(() => {
+                    cardDisplay.style.transform = 'scale(1) rotateY(0deg)';
+                }, 100);
+                
+            }, 1000);
+        }
+
+        // Prevent page refresh/navigation while active
+        window.addEventListener('beforeunload', function(e) {
+            if (timeLeft > 0) {
+                e.preventDefault();
+                e.returnValue = 'Você ainda tem tempo premium restante. Tem certeza que quer sair?';
+            }
+        });
+
+        // Add some premium effects
+        setInterval(() => {
+            if (timeLeft > 0) {
+                // Random sparkle effect
+                const sparkle = document.createElement('div');
+                sparkle.innerHTML = '✨';
+                sparkle.style.position = 'fixed';
+                sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                sparkle.style.fontSize = '20px';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.zIndex = '999';
+                sparkle.style.animation = 'fadeOut 3s forwards';
+                
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 3000);
+            }
+        }, 2000);
+
+        // CSS animation for sparkles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                0% { opacity: 1; transform: translateY(0px); }
+                100% { opacity: 0; transform: translateY(-50px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
