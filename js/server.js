@@ -206,7 +206,7 @@ app.get('/api/payment/status/:token', async (req, res) => {
     const paymentInfo = payments[token];
 
     if (!paymentInfo) {
-        return res.status(404).json({ status: 'not_found' });
+        return res.status(404).json({ status: 'not_found' });s
     }
 
     // Retorna o status atual do pagamento para o cliente
