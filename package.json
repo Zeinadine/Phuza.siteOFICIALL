@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "e2payments": "^1.0.0",
     "express": "^5.1.0",
-    "express-session": "^1.18.2"
+    "express-session": "^1.18.2",
+    "stripe": "^18.5.0"
   }
 }
