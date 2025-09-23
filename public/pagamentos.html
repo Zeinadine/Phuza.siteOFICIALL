@@ -20,7 +20,6 @@
             overflow-x: hidden;
         }
 
-        /* Payment Popup Overlay */
         .payment-overlay {
             position: fixed;
             top: 0;
@@ -162,10 +161,19 @@
             margin-top: 10px;
             font-size: 1rem;
         }
+
+        .test-mode-notice {
+            background: rgba(255, 165, 0, 0.2);
+            border: 2px solid #ffaa00;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #ffaa00;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
-    <!-- Payment Overlay -->
     <div id="paymentOverlay" class="payment-overlay">
         <div class="payment-popup">
             <h2 class="payment-title">PHUZA PREMIUM</h2>
@@ -174,12 +182,16 @@
                 Para acessar o conteúdo premium:
             </div>
             
-            <div class="payment-price">30.00 mzn</div>
+            <div class="payment-price">5.00 USD</div>
             
             <div class="payment-info">
-                ⏱️ 3 horas de acesso<br>
+                ⏱️ 20 segundos de acesso (para teste)<br>
                 🎮 Conteúdo premium completo<br>
                 🔄 Pagamento por sessão
+            </div>
+
+            <div class="test-mode-notice">
+                ⚠️ MODO TESTE: Use cartão de teste 4242424242424242
             </div>
             
             <div class="user-input">
@@ -187,17 +199,18 @@
                     type="number" 
                     id="userNumberInput" 
                     placeholder="Seu número"
-                    min="1"
-                    max="999999999"
                 >
-                <div id="errorMessage" class="error-message hidden">
-                    Por favor, digite um número válido (1-999999999)
-                </div>
+                <div id="errorMessage" class="error-message hidden"></div>
                 <div id="successMessage" class="success-message hidden"></div>
             </div>
             
             <button class="payment-btn" id="paymentBtn" onclick="initPayment()">
                 💳 PAGAR E ACESSAR
+            </button>
+            
+            <!-- Botão de teste para desenvolvimento -->
+            <button class="payment-btn" id="testBtn" onclick="testAccess()" style="background: linear-gradient(45deg, #ff8800, #ffaa00);">
+                🔧 ACESSO TESTE (DEV)
             </button>
             
             <div style="margin-top: 20px; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
@@ -206,7 +219,6 @@
         </div>
     </div>
 
-    <!-- Main Content (blocked initially) -->
     <div class="main-content" id="mainContent">
         <h1 class="brand-title">PHUZA</h1>
         <div class="description">
@@ -214,81 +226,61 @@
             Este conteúdo está protegido por pagamento.
         </div>
         <div style="font-size: 1.2rem; color: #00ff88; margin-top: 30px;">
-            Faça o pagamento para acessar o conteúdo premium por 15 segundos.
+            Faça o pagamento para acessar o conteúdo premium.
         </div>
     </div>
 
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
-        let userNumber = null;
+        // Sua chave pública Stripe
+        const stripe = Stripe('pk_test_51SAU6vJeRhiUN7ahDy3Jgn9j9ST5sxi31bb9Y87oQ9Yo6PQjpHv1qQ0thZKxoDCXD19o4yTyGFOxTkWRoyCl8OTe00Eh5jov0O');
+
         let isPaymentProcessing = false;
-
-        // Check if user already has access on page load
-        window.addEventListener('load', async function() {
-            // Get user number from URL if redirected from payment
-            const urlParams = new URLSearchParams(window.location.search);
-            const urlUserNumber = urlParams.get('user');
-            
-            if (urlUserNumber) {
-                userNumber = urlUserNumber;
-                await checkExistingAccess();
-            } else {
-                showPaymentPopup();
-            }
-        });
-
-        async function checkExistingAccess() {
-            if (!userNumber) return;
-
+        
+        async function checkExistingSession() {
             try {
-                const response = await fetch('/api/check-user', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userNumber: userNumber })
-                });
-
+                console.log('Checking existing session...');
+                const response = await fetch('/api/session/check');
                 const result = await response.json();
+                
+                console.log('Session check result:', result);
 
                 if (result.hasAccess) {
-                    // User has active session, redirect to premium
-                    window.location.href = `/premium?user=${userNumber}`;
+                    console.log('Session found with access, redirecting to premium...');
+                    showSuccess('Sessão encontrada! Redirecionando para o conteúdo premium...');
+                    setTimeout(() => {
+                        window.location.href = '/premium.html';
+                    }, 1500); 
                 } else {
-                    // No access, show payment popup
+                    console.log('No active session, showing payment popup...');
                     showPaymentPopup();
                 }
             } catch (error) {
-                console.error('Erro verificando acesso:', error);
+                console.error('Erro ao verificar sessão:', error);
                 showPaymentPopup();
             }
         }
+        
+        window.addEventListener('load', checkExistingSession);
 
         function showPaymentPopup() {
             document.getElementById('paymentOverlay').classList.remove('hidden');
         }
 
-        function hidePaymentPopup() {
-            document.getElementById('paymentOverlay').classList.add('hidden');
-        }
-
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
             errorDiv.textContent = message;
             errorDiv.classList.remove('hidden');
-            
-            setTimeout(() => {
-                errorDiv.classList.add('hidden');
-            }, 3000);
+            successDiv.classList.add('hidden');
         }
 
         function showSuccess(message) {
             const successDiv = document.getElementById('successMessage');
+            const errorDiv = document.getElementById('errorMessage');
             successDiv.textContent = message;
             successDiv.classList.remove('hidden');
-            
-            setTimeout(() => {
-                successDiv.classList.add('hidden');
-            }, 3000);
+            errorDiv.classList.add('hidden');
         }
 
         async function initPayment() {
@@ -297,71 +289,77 @@
             const userNumberInput = document.getElementById('userNumberInput');
             const inputValue = userNumberInput.value.trim();
 
-            // Validate user number
             if (!inputValue) {
                 showError('Por favor, digite seu número de usuário');
                 return;
             }
 
-            const number = parseInt(inputValue);
-            if (isNaN(number) || number < 1 || number > 999999) {
-                showError('Número deve ser 82,83,84,85,86 ou 87');
-                return;
-            }
-
-            userNumber = inputValue;
             isPaymentProcessing = true;
-
             const paymentBtn = document.getElementById('paymentBtn');
             paymentBtn.disabled = true;
             paymentBtn.textContent = 'Processando...';
 
             try {
-                // Check if user already has active session
-                const checkResponse = await fetch('/api/check-user', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userNumber: userNumber })
-                });
-
-                const checkResult = await checkResponse.json();
-
-                if (checkResult.hasAccess) {
-                    showSuccess('Você já tem acesso ativo! Redirecionando...');
-                    setTimeout(() => {
-                        window.location.href = `/premium?user=${userNumber}`;
-                    }, 1500);
-                    return;
-                }
-
-                // Initialize payment
+                // Primeiro, inicializar o pagamento
                 const response = await fetch('/api/payment/init', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ 
-                        userNumber: userNumber,
-                        amount: 5.00 
+                        userNumber: inputValue,
+                        amount: 5.00,
                     })
                 });
 
                 const result = await response.json();
 
-                if (result.paymentUrl) {
-                    showSuccess('Redirecionando para pagamento...');
-                    setTimeout(() => {
-                        window.open(result.paymentUrl, '_blank', 'width=600,height=700');
-                    }, 1000);
-                } else {
-                    throw new Error('Erro ao inicializar pagamento');
+                if (result.error) {
+                    showError(result.error);
+                    return;
                 }
 
+                if (result.clientSecret) {
+                    // Confirmar pagamento com cartão de teste
+                    const { error, paymentIntent } = await stripe.confirmCardPayment(result.clientSecret, {
+                        payment_method: {
+                            card: {
+                                token: 'tok_visa' // Token de teste do Stripe
+                            }
+                        }
+                    });
+
+                    if (error) {
+                        showError(`Erro no pagamento: ${error.message}`);
+                    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                        // Confirmar no servidor
+                        const confirmResponse = await fetch('/api/payment/confirm', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ 
+                                paymentIntentId: paymentIntent.id 
+                            })
+                        });
+
+                        const confirmResult = await confirmResponse.json();
+                        
+                        if (confirmResult.success) {
+                            showSuccess('Pagamento aprovado! Acesso premium liberado.');
+                            setTimeout(() => {
+                                window.location.href = '/premium.html';
+                            }, 1500);
+                        } else {
+                            showError(confirmResult.message || 'Erro ao confirmar pagamento');
+                        }
+                    }
+                } else {
+                    showError('Erro ao inicializar pagamento.');
+                }
             } catch (error) {
                 console.error('Erro:', error);
-                showError('Erro ao processar. Tente novamente.');
+                showError(`Erro ao processar: ${error.message}`);
             } finally {
                 isPaymentProcessing = false;
                 paymentBtn.disabled = false;
@@ -369,17 +367,34 @@
             }
         }
 
-        // Allow Enter key to submit
-        document.getElementById('userNumberInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                initPayment();
-            }
-        });
+        // Função de teste para desenvolvimento
+        async function testAccess() {
+            const userNumberInput = document.getElementById('userNumberInput');
+            const inputValue = userNumberInput.value.trim() || '12345';
 
-        // Focus on input when page loads
-        setTimeout(() => {
-            document.getElementById('userNumberInput').focus();
-        }, 500);
+            try {
+                const response = await fetch('/api/session/extend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('Acesso teste liberado!');
+                    setTimeout(() => {
+                        window.location.href = '/premium.html';
+                    }, 1000);
+                } else {
+                    showError('Erro no acesso teste');
+                }
+            } catch (error) {
+                console.error('Erro no teste:', error);
+                showError('Erro no acesso teste');
+            }
+        }
     </script>
 </body>
 </html>

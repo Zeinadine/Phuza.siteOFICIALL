@@ -250,11 +250,9 @@ document.querySelectorAll('.feature-card').forEach(card => {
             drawCardBtn.style.opacity = '0.6';
         }
 
-        function goToPremium() {
-
-            window.location.href = 'html.html'; 
-        }
-
+function goToPremium() {
+    window.location.href = '/'; 
+}
         document.querySelectorAll('.feature-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-10px) scale(1.02)';
