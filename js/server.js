@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 // Ex: no terminal, rode `export E2PAYMENTS_API_KEY='MBVk30o4mc7GARjruTKaVdGWp34U5sh40rQqN8k7'`
 const E2PAYMENTS_CONFIG = {
     apiKey: process.env.E2PAYMENTS_API_KEY,
-    baseUrl: process.env.E2PAYMENTS_BASE_URL || 'http://localhost:8000/v1',
+    baseUrl: process.env.E2PAYMENTS_BASE_URL || 'https://sandbox.e2payments.co.mz/v1',
     // Corrija os endpoints conforme a sua documentação da e2Payments
     endpoints: {
         test: '/test',
