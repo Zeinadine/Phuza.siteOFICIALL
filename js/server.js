@@ -5,8 +5,8 @@ const stripe = require('stripe')('sk_test_51SAU6vJeRhiUN7ahBAAN0rcgg8ozL9bfVJocO
 const { createClient } = require('@supabase/supabase-js');
 
 // Configuração do Supabase
-const supabaseUrl = 'SUA_SUPABASE_URL'; // Exemplo: https://xxxxx.supabase.co
-const supabaseKey = 'SUA_SUPABASE_ANON_KEY'; // Sua chave pública (anon key)
+const supabaseUrl = 'https://dggdijcgiyegfchzvgbw.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnZ2RpamNnaXllZ2ZjaHp2Z2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzNzIzMjAsImV4cCI6MjA3Mzk0ODMyMH0.Ea7X6tI7BfJ2kFegW0MXR851msilj3b9j3ZePl1xOls'; // Sua chave pública (anon key)
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const app = express();
