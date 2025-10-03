@@ -6,7 +6,7 @@ const { createClient } = require('@supabase/supabase-js');
 
 // Configuração do Supabase
 const supabaseUrl = 'https://dggdijcgiyegfchzvgbw.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnZ2RpamNnaXllZ2ZjaHp2Z2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzNzIzMjAsImV4cCI6MjA3Mzk0ODMyMH0.Ea7X6tI7BfJ2kFegW0MXR851msilj3b9j3ZePl1xOls'; // Sua chave pública (anon key)
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnZ2RpamNnaXllZ2ZjaHp2Z2J3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODM3MjMyMCwiZXhwIjoyMDczOTQ4MzIwfQ.hc4SRYQTjs-F11H2f1fVADfeSWNfBe3uiiLQPSBCOvY'; // Sua chave pública (anon key)
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const app = express();
